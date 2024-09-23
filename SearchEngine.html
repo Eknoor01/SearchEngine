@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google clone</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body{
+    
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dcdcdc;
+            border-radius: 50px;
+            padding: 5px 10px;
+            width: 600px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-left: 12rem;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 50px;
+        }
+
+        .search-bar button {
+            background: none;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar img {
+            width: 20px;
+            height: 20px;
+        }
+        .Main_Container{
+            display: flex;
+            margin: 40px;
+            width: 100%;
+        }
+        .Elements{
+            display: flex;
+            width: 100%;
+            margin-top: 40px;
+            justify-content: center;
+        }
+        .objects{
+            justify-content: center; 
+            align-items: center; 
+        }
+        .objects ul{
+            list-style: none;
+            justify-content: center;
+            text-align: center;
+        }
+        .objects li{
+            align-items: center;
+            align-self: center;
+        }
+        .objects ul img{
+            width: 60px;
+            padding: 10px;
+        }
+        .history {
+            display: flex;
+            justify-content: center; /* Center the table horizontally */
+            margin-top: 20px;
+        }
+
+        .history table {
+            border-collapse: collapse; /* Merge borders */
+            width: 100%; /* Make the table take full width */
+            max-width: 600px; /* Optional max width */
+        }
+
+        .history th {
+            padding: 10px; /* Add padding for spacing */
+            text-align: center; /* Center align text */
+            border: 1px solid #ddd; /* Add borders for separation */
+            background-color: #f2f2f2; /* Light gray background for headers */
+            font-weight: bold; 
+        }
+
+    </style>
+</head>
+<body>
+    <Section>
+        
+        <div class="Main_Container">
+                <div class="Header">
+                    <h1>Seekly</h1>
+                </div>
+                <div class="search-bar">
+                    <button class="magnifyingGlass"></button>
+                        <img src="https://www.svgrepo.com/show/479646/magnifying-glass-9.svg" alt="Voice Search" />
+                    </button>
+                    <input type="text" placeholder="Search Seekly or type a URL" />
+                    <button class="voice-search">
+                        <img src="https://www.svgrepo.com/show/1902/microphone.svg" alt="Voice Search" />
+                    </button>
+                    <button class="camera-search">
+                        <img src="https://www.svgrepo.com/show/533059/camera.svg" alt="Camera Search" />
+                    </button>
+                </div>
+                
+        </div>
+        <div class="Elements">
+    
+            <div class="objects">
+                <ul>
+                    <li><img src="https://www.svgrepo.com/show/421070/play-video-youtube.svg" alt=""></li>
+                    <li><h5>utub</h5></li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <ul>
+                    <li><img src="https://www.svgrepo.com/show/243092/gmail.svg" alt=""></li>
+                    <li><h5>Mail</h5></li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <ul>
+                    <li><img src="https://www.svgrepo.com/show/382724/google-play-store.svg" alt=""></li>
+                    <li><h5>Store</h5></li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <ul>
+                    <li><img src="https://www.svgrepo.com/show/418053/plus.svg" alt=""></li>
+                    <li><h5>Add Shortcut</h5></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="history">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Srno</th>
+                        <th>History</th>
+                        <th>Time</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        
+    </Section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const searchBar = document.querySelector('.search-bar input');
+        const historyTable = document.querySelector('.history table');
+
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+        const updateHistoryTable = () => {
+                historyTable.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Srno</th>
+                            <th>History</th>
+                            <th>Time</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${searchHistory.map((entry, index) => `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${entry.query}</td>
+                                <td>${entry.time}</td>
+                                <td>${entry.date}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+            };
+
+            const addSearchHistory = (query) => {
+                const date = new Date();
+                const newEntry = {
+                    query,
+                    time: date.toLocaleTimeString(),
+                    date: date.toLocaleDateString()
+                };
+                searchHistory.unshift(newEntry);
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                updateHistoryTable();
+            };
+
+            searchBar.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && searchBar.value.trim() !== '') {
+                    addSearchHistory(searchBar.value.trim());
+                    searchBar.value = '';
+                }
+            });
+
+            updateHistoryTable();
+        });
+
+    </script>
+</body>
+</html>
